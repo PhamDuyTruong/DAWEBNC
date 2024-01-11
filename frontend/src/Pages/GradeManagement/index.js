@@ -3,6 +3,7 @@ import handleDownload from "../../utils/handleDownload";
 import classroomApi from "../../Services/classroomApi";
 import { DownloadOutlined } from "@ant-design/icons";
 import { Button, Input, Typography, message } from "antd";
+import GradeBoard from "./Components/GradeBoard";
 
 const { Text } = Typography;
 
@@ -82,6 +83,9 @@ const GradeManagement = ({ classId }) => {
             </Button>
           </div>
         </div>
+      </div>
+      <div className="mt-3">
+        <GradeBoard classroom={classroom} setClassroom={setClassroom} />
       </div>
     </div>
   );

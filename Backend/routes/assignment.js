@@ -4,7 +4,7 @@ const router = require("express").Router();
 
 //create assignment
 router.post(
-  "/",
+  "/classroom/:classId",
   authMiddleware.verifyToken,
   assignmentController.createAssignment
 );
@@ -24,7 +24,7 @@ router.get("/detail/:id", assignmentController.getDetailAssignment);
 
 //delete assignment
 router.delete(
-  "/:id",
+  "/:id/classroom/:classId",
   authMiddleware.verifyToken,
   assignmentController.deleteAssignment
 );

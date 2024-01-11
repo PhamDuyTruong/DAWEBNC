@@ -213,6 +213,7 @@ const classController = {
       if (!student) {
         const newStudent = {
           accountId: req.user.id,
+          studentId: req.user.studentId,
           fullname: req.user.username,
           email: req.user.email,
           profilePic: req.user.profilePic,
@@ -286,6 +287,7 @@ const classController = {
       if (!student) {
         const newStudent = {
           accountId: req.user.id,
+          studentId: req.user.studentId,
           fullname: req.user.username,
           email: req.user.email,
           profilePic: req.user.profilePic,
@@ -452,6 +454,7 @@ const classController = {
           if (!student) {
             const newStudent = {
               accountId: req.user.id,
+              studentId: req.user.studentId,
               fullname: req.user.username,
               email: req.user.email,
               profilePic: req.user.profilePic,
@@ -483,6 +486,7 @@ const classController = {
           if (!teacher) {
             const newTeacher = {
               accountId: req.user.id,
+              studentId: req.user.studentId,
               fullname: req.user.username,
               email: req.user.email,
               profilePic: req.user.profilePic,

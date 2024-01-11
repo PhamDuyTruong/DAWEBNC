@@ -25,7 +25,7 @@ const Exercises = ({ isTeacher, classId }) => {
 
   const handleDeleteAssignment = async (id) => {
     try {
-      const response = await assignmentApi.deleteAssignment(id);
+      const response = await assignmentApi.deleteAssignment(id, classId);
       if (response) {
         console.log(response);
         Swal.fire({

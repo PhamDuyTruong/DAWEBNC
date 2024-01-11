@@ -82,6 +82,22 @@ const studentSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  grades: [
+    {
+      grade: {
+        type: Number,
+      },
+      assignmentId: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Assignment",
+        required: true,
+      },
+      isFinal: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  ],
 });
 
 const classroomSchema = new mongoose.Schema(
@@ -114,9 +130,11 @@ const classroomSchema = new mongoose.Schema(
     },
     invitationCode: {
       type: String,
-      default: Math.random().toString(36).slice(2, Math.floor(Math.random() * 3) + 7),
+      default: Math.random()
+        .toString(36)
+        .slice(2, Math.floor(Math.random() * 3) + 7),
     },
-    gradeComposition: [gradeCompositionSchema]
+    gradeComposition: [gradeCompositionSchema],
   },
   { timestamps: true }
 );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Divider, Dropdown, Modal, message } from "antd";
 import {
   MoreOutlined,
@@ -10,7 +10,24 @@ import {
 import classroomApi from "../../../Services/classroomApi";
 import validateEmail from "../../../utils/validateEmail";
 
-const People = ({ classroom }) => {
+const People = ({ classId }) => {
+
+  const [classroom, setClassroom] = useState({});
+
+  useEffect(() => {
+    getClassroomById();
+  }, []);
+
+  const getClassroomById = async () => {
+    try {
+      const response = await classroomApi.getClassroomById(classId);
+      const classroom = response.data;
+      setClassroom(classroom);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const menuProps = (item) => {
     let items = [
       {
@@ -104,7 +121,7 @@ const People = ({ classroom }) => {
         )}
       </div>
       <div>
-        {classroom.teachers.map((teacher) => (
+        {classroom.teachers?.map((teacher) => (
           <div
             key={teacher._id}
             className={`flex items-center justify-between p-3 border-b border-b-gray-200 ${
@@ -167,16 +184,16 @@ const People = ({ classroom }) => {
       <div className="w-full flex justify-between items-center p-3 border-b border-b-blue-600">
         <h2 className=" text-blue-600">Students</h2>
         {classroom.createdUser == userInfo._id && (
-        <div className="flex items-center justify-center py-2 px-[12px] rounded-full cursor-pointer hover:bg-slate-200/60">
-          <UsergroupAddOutlined
-            className="text-2xl text-blue-600"
-            onClick={showStudentModal}
-          />
-        </div>
-      )}
+          <div className="flex items-center justify-center py-2 px-[12px] rounded-full cursor-pointer hover:bg-slate-200/60">
+            <UsergroupAddOutlined
+              className="text-2xl text-blue-600"
+              onClick={showStudentModal}
+            />
+          </div>
+        )}
       </div>
       <div>
-        {classroom.students.map((student) => (
+        {classroom.students?.map((student) => (
           <div
             key={student._id}
             className={`flex items-center justify-between p-3 border-b border-b-gray-200 ${

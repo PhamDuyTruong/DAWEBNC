@@ -1,11 +1,20 @@
 const Assignment = require("../models/Assignment");
 const ApiFeature = require("../utils/ApiFeature");
+const Classroom = require("../models/Classroom");
 
 const assignmentController = {
   createAssignment: async (req, res) => {
     const newAssignment = new Assignment(req.body);
     try {
       const savedAssignment = await newAssignment.save();
+      const classroom = await Classroom.findById(req.params.classId);
+
+      classroom.students.forEach((student) => {
+        student.grades.push({
+          assignmentId: savedAssignment._id,
+        });
+      });
+      await classroom.save();
       res.status(200).json(savedAssignment);
     } catch (error) {
       res.status(500).json(error);
@@ -60,6 +69,14 @@ const assignmentController = {
         message: "Assignment not found !!!",
       });
     }
+    const classroom = await Classroom.findById(req.params.classId);
+    classroom.students.forEach((student) => {
+      student.grades = student.grades.filter(
+        (grade) => grade.assignmentId != req.params.id
+      );
+    });
+    await classroom.save();
+    
     try {
       await assignment.remove();
       return res.status(200).json({

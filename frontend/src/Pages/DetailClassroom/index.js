@@ -120,7 +120,7 @@ const DetailClass = () => {
               </CustomTabPanel>
             )}
             <CustomTabPanel value={value} index={4}>
-              <People classroom={classroom} />
+              <People classId={id} />
             </CustomTabPanel>
           </Box>
         </div>

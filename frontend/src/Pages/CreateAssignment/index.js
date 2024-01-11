@@ -26,6 +26,7 @@ const CreateAssignment = () => {
   const classId = localStorage.getItem("classId") || "";
   const [classroom, setClassroom] = useState({});
 
+
   useEffect(() => {
     handleGetClassroom();
   }, []);
@@ -107,7 +108,7 @@ const CreateAssignment = () => {
       maxPoint: maxPoint || 0,
     };
     try {
-      const response = await assignmentApi.createAssignment(data);
+      const response = await assignmentApi.createAssignment(data, classId);
       if (response) {
         Swal.fire(
           "Create Assignment successfully!",

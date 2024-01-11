@@ -10,11 +10,15 @@ const gradeSchema = new mongoose.Schema({
         ref: "Assignment",
         required: true, 
     },
-    studentId: {
-        type: mongoose.Schema.ObjectId,
-        ref: "User",
-        required: true,
+    isFinal: {
+        type: Boolean,
+        default: false,
     },
+    // studentId: {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: "User",
+    //     required: true,
+    // },
     review: {
         reviewerId: {
             type: mongoose.Schema.ObjectId,
