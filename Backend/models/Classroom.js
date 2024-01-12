@@ -96,6 +96,9 @@ const studentSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
       },
+      tempGrade: {
+        type: Number,
+      },
     },
   ],
 });

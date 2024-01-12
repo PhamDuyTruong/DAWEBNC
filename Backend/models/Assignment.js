@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const gradeCompositionSchema = require("./GradeComposition");
 
 const assignmentSchema = new mongoose.Schema({
     title: {
@@ -25,7 +24,10 @@ const assignmentSchema = new mongoose.Schema({
         ref: "Classroom",
         required: true,
     },
-    // gradeComposition: gradeCompositionSchema,
+    // gradeComposition: {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: "GradeComposition",
+    // },
     gradeComposition: {
         type: String,
     },

@@ -11,4 +11,5 @@ const gradeCompositionSchema = new mongoose.Schema({
         default: 0,
     }
 }, {timestamps: true});
+
 module.exports = gradeCompositionSchema;

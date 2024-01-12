@@ -683,7 +683,140 @@ const classController = {
       await classroom.save();
       res.status(200).json(classroom);
     } catch (error) {
-      console.log(error);
+      res.status(500).json(error);
+    }
+  },
+  updateGrade: async (req, res) => {
+    const classroom = await Classroom.findById(req.params.classId);
+    if (!classroom) {
+      return res.status(404).json({
+        success: false,
+        message: "Classroom not found !!!",
+      });
+    }
+
+    try {
+      const { studentId, assignmentId } = req.params;
+      const { newGrade } = req.body;
+
+      const student = classroom.students.find(
+        (student) => student.studentId == studentId
+      );
+
+      if (!student) {
+        return res.status(404).json({
+          success: false,
+          message: "Student not found !!!",
+        });
+      }
+
+      const grade = student.grades.find(
+        (grade) => grade.assignmentId == assignmentId
+      );
+
+      if (!grade) {
+        student.grades.push({
+          assignmentId: assignmentId,
+          tempGrade: newGrade,
+        });
+      } else {
+        grade.tempGrade = newGrade;
+        grade.isFinal = false;
+      }
+
+      await classroom.save();
+      res.status(200).json(classroom);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  uploadAssignmentGrade: async (req, res) => {
+    const workbook = readFile(req.file.path);
+    const sheetNameList = workbook.SheetNames;
+    const students = utils.sheet_to_json(workbook.Sheets[sheetNameList[0]]);
+
+    try {
+      let classroom = await Classroom.findById(req.params.classId);
+      if (!classroom) {
+        return res.status(404).json({
+          success: false,
+          message: "Classroom not found !!!",
+        });
+      }
+
+      for (let student of students) {
+        await Classroom.findOneAndUpdate(
+          {
+            _id: req.params.classId,
+          },
+          {
+            $set: {
+              "students.$[elem].grades.$[elem2].tempGrade": parseInt(
+                student.grade
+              ),
+            },
+          },
+          {
+            arrayFilters: [
+              { "elem.studentId": student.studentId },
+              { "elem2.assignmentId": req.params.assignmentId },
+            ],
+            // new: true,
+          },
+          (err, doc) => {
+            if (err) {
+              console.log(err);
+            }
+            classroom = doc;
+          }
+        ).clone();
+      }
+
+      const updatedClass = await classroom.save();
+      res.status(200).json(updatedClass);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  markGradeFinalized: async (req, res) => {
+    try {
+      let classroom = await Classroom.findById(req.params.classId);
+      if (!classroom) {
+        return res.status(404).json({
+          success: false,
+          message: "Classroom not found !!!",
+        });
+      }
+
+      await Classroom.findOneAndUpdate(
+        {
+          _id: req.params.classId,
+        },
+        {
+          $set: {
+            "students.$[elem].grades.$[elem2].isFinal": true,
+            "students.$[elem].grades.$[elem2].grade": parseInt(req.body.grade),
+            "students.$[elem].grades.$[elem2].tempGrade": null,
+          },
+        },
+        {
+          arrayFilters: [
+            { "elem.studentId": req.params.studentId },
+            { "elem2.assignmentId": req.params.assignmentId },
+          ],
+          // new: true,
+        },
+        (err, doc) => {
+          if (err) {
+            console.log(err);
+          }
+          classroom = doc;
+        }
+      ).clone();
+
+      const updatedClass = await classroom.save();
+      res.status(200).json(updatedClass);
+    } catch (error) {
       res.status(500).json(error);
     }
   },
