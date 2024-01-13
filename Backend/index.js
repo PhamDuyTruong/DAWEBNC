@@ -24,10 +24,16 @@ const app = express();
 // https://edulearning.vercel.app
 
 app.use(
-  cors({
-    credentials: true,
-    origin: "http://localhost:3000",
-  })
+  cors([
+    {
+      credentials: true,
+      origin: "http://localhost:3000",
+    },
+    {
+      credentials: true,
+      origin: "https://edulearning.vercel.app",
+    },
+  ])
 );
 
 app.use(
@@ -71,7 +77,6 @@ const assignmentStorage = multer.diskStorage({
     cb(null, "./public/images/assignment");
   },
 });
-
 
 const documentStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -150,8 +155,6 @@ const documentMiddleware = multer({
     }
   },
 });
-
-
 
 app.post(
   "/api/upload-photo",
