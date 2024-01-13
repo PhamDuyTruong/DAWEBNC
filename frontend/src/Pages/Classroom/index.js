@@ -74,10 +74,13 @@ const Classroom = () => {
           onClick: () => {},
         },
         {
-          label: "Copy",
+          label: "Copy invite code",
           key: "3",
           icon: <CopyOutlined />,
-          onClick: () => {},
+          onClick: () => {
+            navigator.clipboard.writeText(item.invitationCode);
+            message.success("Copied to clipboard");
+          },
         },
         {
           label: "Archive",

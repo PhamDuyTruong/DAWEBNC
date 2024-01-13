@@ -11,6 +11,7 @@ function DetailGradeReview() {
 
   const [review, setReview] = useState({});
   const [student, setStudent] = useState({});
+  const [classroom, setClassroom] = useState({});
 
   useEffect(() => {
     getGradeReviewById();
@@ -36,6 +37,26 @@ function DetailGradeReview() {
       console.log(error);
     }
   };
+
+  const getClassroom = async () => {
+    try {
+      const response = await classroomApi.getClassroomById(classId);
+      const data = response.data;
+      setClassroom(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  const isTeacher = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (classroom.teachers) {
+      const check = classroom.teachers.find(
+        (teacher) => teacher.accountId == user._id
+      );
+      if (check) return true;
+    }
+  }
 
   const updateStatus = async (status) => {
     try {
@@ -117,7 +138,7 @@ function DetailGradeReview() {
                 <span className="text-lg">{review.status?.toUpperCase()}</span>
               </div>
 
-              {review.status === "pending" && (
+              {isTeacher() && review.status === "pending" && (
                 <div className="flex gap-2">
                   <Button
                     type="primary"

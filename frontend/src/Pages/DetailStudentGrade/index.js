@@ -72,7 +72,7 @@ function DetailStudentGrade() {
     for (let i = 0; i < grades.current.length; i++) {
       sum += grades.current[i].grade;
 
-      totalMaxGrade += assignments[i].maxPoint;
+      totalMaxGrade += assignments[i].maxPoint || 0;
     }
 
     const overall = (sum / totalMaxGrade) * 100;
@@ -84,6 +84,10 @@ function DetailStudentGrade() {
       const response = await classroomApi.getStudentInfo(classId, studentId);
       const student = response.data;
       grades.current = student.grades;
+      if (student.studentId !== studentId)
+        return message.error(
+          "You are not allowed to view this student's grade"
+        );
       setStudentInfo(student);
     } catch (error) {
       message.error(error.message);
@@ -140,7 +144,9 @@ function DetailStudentGrade() {
               <Modal
                 title="Request Review"
                 open={modalVisible}
-                onOk={() => handleReviewRequest(grade.grade, assignments[index])}
+                onOk={() =>
+                  handleReviewRequest(grade.grade, assignments[index])
+                }
                 onCancel={() => setModalVisible(false)}
               >
                 <GradeReview

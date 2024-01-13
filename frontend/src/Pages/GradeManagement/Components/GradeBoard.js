@@ -140,9 +140,8 @@ const GradeBoard = ({
       dataIndex: assignment._id,
       key: assignment._id,
       render: (text, record) => {
-        if(!record.grades.length) return (<div></div>);
 
-        const { tempGrade, grade, isFinal } = record.grades[index];
+        const { tempGrade, grade, isFinal } = record.grades[index] || {};
 
         const gradeCell = isFinal ? grade : tempGrade;
 

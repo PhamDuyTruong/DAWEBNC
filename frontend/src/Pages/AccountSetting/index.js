@@ -31,6 +31,7 @@ const AccountSetting = () => {
       phone: phone || userInfo.phone,
       profilePic: userInfo.profilePic || "",
       password: password || userInfo.password,
+      ...userInfo,
     };
     if (file) {
       const formData = new FormData();

@@ -7,6 +7,10 @@ const { utils, readFile } = require("xlsx");
 
 const classController = {
   createClass: async (req, res) => {
+    let code = Math.random()
+      .toString(36)
+      .slice(2, Math.floor(Math.random() * 3) + 7);
+
     const newClass = new Classroom({
       ...req.body,
       createdUser: req.user.id,
@@ -19,6 +23,7 @@ const classController = {
           isJoined: true,
         },
       ],
+      invitationCode: code,
     });
 
     try {
@@ -816,10 +821,10 @@ const classController = {
 
       const updatedClass = await classroom.save();
 
-      req.io.emit('grade-finalized', {
-        message: 'The grade composition has been finalized.',
+      req.io.emit("grade-finalized", {
+        message: "The grade composition has been finalized.",
       });
- 
+
       res.status(200).json(updatedClass);
     } catch (error) {
       res.status(500).json(error);
@@ -860,8 +865,7 @@ const classController = {
     } catch (error) {
       res.status(500).json(error);
     }
-  }
+  },
 };
-
 
 module.exports = classController;
