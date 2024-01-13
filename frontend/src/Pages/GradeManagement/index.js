@@ -82,7 +82,7 @@ const GradeManagement = ({ classId }) => {
 
   const handleFileUpload = async (event) => {
     event.preventDefault();
-    if(!file.current) return message.error("Please select a file");
+    if (!file.current) return message.error("Please select a file");
 
     const formData = new FormData();
     formData.append("grade", file.current);
@@ -101,19 +101,19 @@ const GradeManagement = ({ classId }) => {
 
   const handleGradeUpload = async (event) => {
     event.preventDefault();
-    if(!fileGrade.current) return message.error("Please select a file");
+    if (!fileGrade.current) return message.error("Please select a file");
 
     const formData = new FormData();
     formData.append("assignmentGrade", fileGrade.current);
     setGradeLoading(true);
     try {
-       await classroomApi.uploadAssignmentGrade(
+      await classroomApi.uploadAssignmentGrade(
         classId,
         selectedUploadAssignmentId,
         formData
       );
       // Refresh the assignments data after the upload
-      getAssignmentByClass();
+      getClassroomById();
       message.success("Upload successfully");
     } catch (error) {
       console.log(error);
@@ -255,7 +255,12 @@ const GradeManagement = ({ classId }) => {
         </div>
       </div>
       <div className="mt-3">
-        <GradeBoard classroom={classroom} assignments={assignments} />
+        <GradeBoard
+          classroom={classroom}
+          setClassroom={setClassroom}
+          assignments={assignments}
+          setAssignments={setAssignments}
+        />
       </div>
     </div>
   );

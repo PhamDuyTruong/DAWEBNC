@@ -168,4 +168,10 @@ router.put(
   classController.markGradeFinalized
 );
 
+router.get(
+  "/:classId/student/:studentId",
+  authMiddleware.verifyToken,
+  classController.getStudentInfo
+);
+
 module.exports = router;

@@ -74,6 +74,9 @@ const classroomApi = {
   markGradeFinalized: (classId, studentId, assignmentId, grade) => {
     return axiosClient.put(`/api/classroom/${classId}/student/${studentId}/assignment/${assignmentId}/mark-finalized`, { grade: grade });
   },
+  getStudentInfo: (classId, studentId) => {
+    return axiosClient.get(`/api/classroom/${classId}/student/${studentId}`);
+  },
 };
 
 export default classroomApi;
