@@ -24,16 +24,10 @@ const app = express();
 // https://edulearning.vercel.app
 
 app.use(
-  cors([
-    {
-      credentials: true,
-      origin: "http://localhost:3000",
-    },
-    {
-      credentials: true,
-      origin: "https://edulearning.vercel.app",
-    },
-  ])
+  cors({
+    credentials: true,
+    origin: "https://edulearning.vercel.app",
+  })
 );
 
 app.use(
