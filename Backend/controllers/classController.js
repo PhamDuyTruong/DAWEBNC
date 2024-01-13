@@ -427,7 +427,7 @@ const classController = {
       }
 
       res.redirect(
-        `http://localhost:3000/classroom/invite/accept_token/${classroom._id}?token=${token}&role=${decoded.role}`
+        `https://edulearning.vercel.app/classroom/invite/accept_token/${classroom._id}?token=${token}&role=${decoded.role}`
       );
     } catch (error) {
       res.status(500).json(error);
@@ -855,8 +855,7 @@ const classController = {
     } catch (error) {
       res.status(500).json(error);
     }
-  }
+  },
 };
-
 
 module.exports = classController;
