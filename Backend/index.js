@@ -9,6 +9,9 @@ const fs = require("fs");
 const multer = require("multer");
 const passport = require("passport");
 const session = require("express-session");
+const http = require("http");
+const socketio = require("socket.io");
+
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/users");
 const bookingRouter = require("./routes/booking");
@@ -21,6 +24,19 @@ dotenv.config();
 require("./services/passport");
 
 const app = express();
+const server = http.createServer(app);
+const io = socketio(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+// Make io accessible to our router
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
 
 // https://edulearning.vercel.app
 
@@ -72,7 +88,6 @@ const assignmentStorage = multer.diskStorage({
     cb(null, "./public/images/assignment");
   },
 });
-
 
 const documentStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -151,8 +166,6 @@ const documentMiddleware = multer({
     }
   },
 });
-
-
 
 app.post(
   "/api/upload-photo",
@@ -254,7 +267,7 @@ mongoose
   .connect(URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("Connected to DB");
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server is running at ${PORT}`);
     });
   })
