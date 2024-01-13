@@ -8,8 +8,8 @@ const { utils, readFile } = require("xlsx");
 const classController = {
   createClass: async (req, res) => {
     const newClass = new Classroom({
-      createdUser: req.user.id,
       ...req.body,
+      createdUser: req.user.id,
       teachers: [
         {
           accountId: req.user.id,
@@ -815,6 +815,11 @@ const classController = {
       ).clone();
 
       const updatedClass = await classroom.save();
+
+      req.io.emit('grade-finalized', {
+        message: 'The grade composition has been finalized.',
+      });
+ 
       res.status(200).json(updatedClass);
     } catch (error) {
       res.status(500).json(error);

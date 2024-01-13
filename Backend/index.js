@@ -9,17 +9,34 @@ const fs = require("fs");
 const multer = require("multer");
 const passport = require("passport");
 const session = require("express-session");
+const http = require("http");
+const socketio = require("socket.io");
+
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/users");
 const bookingRouter = require("./routes/booking");
 const classRouter = require("./routes/classroom");
 const assignmentRouter = require("./routes/assignment");
 const gradeRouter = require("./routes/grade");
+const gradeReviewRouter = require("./routes/gradeReview");
 
 dotenv.config();
 require("./services/passport");
 
 const app = express();
+const server = http.createServer(app);
+const io = socketio(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+// Make io accessible to our router
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
 
 // https://edulearning.vercel.app
 
@@ -240,6 +257,7 @@ app.use("/api/book", bookingRouter);
 app.use("/api/classroom", classRouter);
 app.use("/api/assignment", assignmentRouter);
 app.use("/api/grade", gradeRouter);
+app.use("/api/gradeReview", gradeReviewRouter);
 
 const PORT = process.env.PORT || 5000;
 const URI = process.env.DB_URL;
@@ -249,7 +267,7 @@ mongoose
   .connect(URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("Connected to DB");
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server is running at ${PORT}`);
     });
   })

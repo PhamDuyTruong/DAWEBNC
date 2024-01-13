@@ -79,7 +79,7 @@ const classroomApi = {
   },
   getAllJoinedClass: (accountId) => {
     return axiosClient.get(`/api/classroom/student/${accountId}`);
-  }
+  },
 };
 
 export default classroomApi;

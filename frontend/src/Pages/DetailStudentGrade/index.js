@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import classroomApi from "../../Services/classroomApi";
-import { Divider, message } from "antd";
+import { Form, Modal, Divider, message, Button } from "antd";
 import { useParams } from "react-router-dom";
 import assignmentApi from "../../Services/assignmentApi";
+import GradeReview from "./Components/GradeReview";
+import gradeReviewApi from "../../Services/gradeReviewApi";
 
 function DetailStudentGrade() {
   const [overallGrade, setOverallGrade] = useState(0);
@@ -11,6 +13,43 @@ function DetailStudentGrade() {
   const [assignments, setAssignments] = useState([]);
 
   const { studentId, classId } = useParams();
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [form] = Form.useForm();
+
+  const handleReviewRequest = async (currentGrade, assignment) => {
+    // TODO: Send the review request to the server
+    try {
+      const grade = form.getFieldValue("grade");
+      const comment = form.getFieldValue("comment");
+
+      const newReviewRequest = {
+        grade,
+        comment,
+        currentGrade,
+        gradeComposition: assignment.gradeComposition,
+      };
+
+      await gradeReviewApi.createGradeReview(
+        studentId,
+        classId,
+        assignment._id,
+        newReviewRequest
+      );
+
+      message.success("Review request sent successfully");
+    } catch (error) {
+      message.error(error.message);
+    }
+
+    // Close the modal and reset the form
+    setModalVisible(false);
+    form.resetFields();
+  };
+
+  const showModal = () => {
+    setModalVisible(true);
+  };
 
   const getAssignmentByClass = async () => {
     if (!classId) return;
@@ -31,9 +70,8 @@ function DetailStudentGrade() {
     if (!grades.current.length) return 0;
 
     for (let i = 0; i < grades.current.length; i++) {
-      if (grades.current[i].isFinal) {
-        sum += grades.current[i].grade;
-      }
+      sum += grades.current[i].grade;
+
       totalMaxGrade += assignments[i].maxPoint;
     }
 
@@ -87,15 +125,29 @@ function DetailStudentGrade() {
               className="flex items-center justify-between border px-4 py-2 rounded-md"
             >
               <div className="flex flex-col gap-1">
-                <h4>{assignments[index].title}</h4>
+                <h4>{assignments[index]?.title}</h4>
                 <span className="text-xs text-gray-400">
-                  {assignments[index].gradeComposition}
+                  {assignments[index]?.gradeComposition ||
+                    "No grade composition"}
                 </span>
               </div>
               <div className="text-gray-900 font-semibold">
-                {grade.isFinal ? grade.grade : grade.tempGrade} /{" "}
-                {assignments[index].maxPoint}
+                {grade.grade} / {assignments[index]?.maxPoint}
               </div>
+              <Button type="primary" onClick={() => showModal()}>
+                Request Review
+              </Button>
+              <Modal
+                title="Request Review"
+                open={modalVisible}
+                onOk={() => handleReviewRequest(grade.grade, assignments[index])}
+                onCancel={() => setModalVisible(false)}
+              >
+                <GradeReview
+                  form={form}
+                  maxPoint={assignments[index]?.maxPoint}
+                />
+              </Modal>
             </li>
           ))}
         </ul>

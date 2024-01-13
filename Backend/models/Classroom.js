@@ -86,6 +86,7 @@ const studentSchema = new mongoose.Schema({
     {
       grade: {
         type: Number,
+        default: null,
       },
       assignmentId: {
         type: mongoose.Schema.ObjectId,
@@ -98,6 +99,7 @@ const studentSchema = new mongoose.Schema({
       },
       tempGrade: {
         type: Number,
+        default: null,
       },
     },
   ],

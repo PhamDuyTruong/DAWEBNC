@@ -7,6 +7,8 @@ import { getShowCart } from "../../Actions/SidebarAction";
 import Wishlist from "../Wishlist";
 import { BiBook } from "react-icons/bi";
 import logo from "../../Assets/images/Logo.jpg";
+import Notifications from "react-notifications-menu";
+
 const nav_links = [
   {
     path: "/",
@@ -53,6 +55,8 @@ const Header = () => {
   //   return window.removeEventListener("scroll", stickyHeaderFunction);
   // }, []);
 
+  const data = [];
+
   const toggleMenu = () => {
     menuRef.current.classList.toggle("show__menu");
   };
@@ -97,10 +101,27 @@ const Header = () => {
                 })}
               </ul>
             </div>
+
             <div className="nav__right d-flex align-items-center gap-4">
               <div className="nav__btns d-flex align-items-center gap-4">
                 {userInfo ? (
                   <>
+                    <div style={{ marginBottom: 50 }}>
+                      <Notifications
+                        data={data}
+                        header={{
+                          title: "Notifications",
+                          option: {
+                            text: "View All",
+                            onClick: () => console.log("Clicked"),
+                          },
+                        }}
+                        markAsRead={(data) => {
+                          console.log(data);
+                        }}
+                      />
+                    </div>
+
                     <div className="ml-3 cursor-pointer">
                       <Link to="/account">
                         <img
