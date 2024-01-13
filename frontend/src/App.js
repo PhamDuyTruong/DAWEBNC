@@ -31,6 +31,7 @@ import DetailStudentGrade from "./Pages/DetailStudentGrade";
 import DetailGradeReview from "./Pages/DetailGradeReview";
 
 function App() {
+
   return (
     <BrowserRouter>
       <Switch>
@@ -134,7 +135,7 @@ function App() {
               </Route>
               <Route path="/classroom/:classId/grade-review/:id">
                 <AppLayout>
-                  <DetailGradeReview/>
+                  <DetailGradeReview />
                 </AppLayout>
               </Route>
               <Route path="/logout">

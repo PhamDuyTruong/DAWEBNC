@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { CameraIcon } from "../Classroom/Components/CameraIcon";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";

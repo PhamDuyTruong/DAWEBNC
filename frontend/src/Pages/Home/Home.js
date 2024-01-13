@@ -13,6 +13,7 @@ import Contact from "./Components/Contact/Contact";
 // import FeatureHotels from "./Components/FeatureHotels";
 // import FeatureSites from "./Components/FeatureSites/FeatureSites";
 
+
 const Home = () => {
   return (
     <>
