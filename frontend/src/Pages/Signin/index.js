@@ -187,7 +187,7 @@ function Signin(props) {
               <div className="w-full -mt-4 flex justify-center items-center">
                 <div className="flex-1">
                   <a
-                    href="http://localhost:5000/api/auth/google"
+                    href="https://elearning-g2i8.onrender.com/api/auth/google"
                     target="_blank"
                     class="flex items-center justify-center w-full px-4 py-2 mt-2 space-x-3 text-sm text-center bg-red-500 text-white transition-colors duration-200 transform border rounded-lg dark:text-gray-300 dark:border-gray-300 hover:bg-gray-600 dark:hover:bg-gray-700"
                   >
@@ -205,7 +205,7 @@ function Signin(props) {
                 </div>
                 <div className="flex-1">
                   <a
-                    href="http://localhost:5000/api/auth/facebook"
+                    href="https://elearning-g2i8.onrender.com/api/auth/facebook"
                     target="_blank"
                     class="flex items-center justify-center w-full px-4 py-2 mt-2 space-x-3 text-sm text-center bg-blue-500 text-white transition-colors duration-200 transform border rounded-lg dark:text-gray-300 dark:border-gray-300 hover:bg-gray-600 dark:hover:bg-gray-700"
                   >

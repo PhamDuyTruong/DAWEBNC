@@ -11,7 +11,6 @@ import classroomApi from "../../../Services/classroomApi";
 import validateEmail from "../../../utils/validateEmail";
 
 const People = ({ classId }) => {
-
   const [classroom, setClassroom] = useState({});
 
   useEffect(() => {
@@ -77,7 +76,7 @@ const People = ({ classId }) => {
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(
-      `http://localhost:3000/classroom/${classroom._id}/join/link?cjc=${classroom.invitationCode}`
+      `https://edulearning.vercel.app/classroom/${classroom._id}/join/link?cjc=${classroom.invitationCode}`
     );
     message.success("Copied to clipboard");
   };
@@ -243,7 +242,8 @@ const People = ({ classId }) => {
         <span className="mt-8 font-semibold">Invitation link</span>
         <div className="flex items-baseline -mt-2 space-y-2">
           <div className="truncate">
-            http://localhost:3000/classroom/{classroom._id}/join/link?cjc=
+            https://edulearning.vercel.app/classroom/{classroom._id}
+            /join/link?cjc=
             {classroom.invitationCode}
           </div>
           <div className="w-12 flex items-center justify-center cursor-pointer p-2 rounded-3xl hover:bg-zinc-400/10">

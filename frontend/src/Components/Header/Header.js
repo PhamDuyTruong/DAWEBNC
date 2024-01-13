@@ -106,7 +106,7 @@ const Header = () => {
               <div className="nav__btns d-flex align-items-center gap-4">
                 {userInfo ? (
                   <>
-                    <div style={{ marginLeft: "50%", marginBottom: 50 }}>
+                    <div style={{ marginBottom: 50 }}>
                       <Notifications
                         data={data}
                         header={{
