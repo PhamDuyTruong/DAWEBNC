@@ -9,6 +9,7 @@ import Signup from "./Pages/Signup";
 import AccountBooking from "./Pages/AccountSetting/AccountBooking";
 import AccountMemory from "./Pages/AccountSetting/AccountMemory";
 import AccountSetting from "./Pages/AccountSetting";
+import AccountGrade from "./Pages/AccountSetting/AccountGrade";
 import LogOut from "./Pages/Logout";
 import PageNotFound from "./Pages/PageNotFound";
 import ForgotPassword from "./Pages/ForgotPassword";
@@ -26,6 +27,7 @@ import ClassDirectJoining from "./Pages/JoinClassroom/ClassDirectJoining";
 import ClassEmailJoining from "./Pages/JoinClassroom/ClassEmailJoining";
 import CreateAssignment from "./Pages/CreateAssignment";
 import ClassCodeJoining from "./Pages/JoinClassroom/ClassCodeJoining";
+import DetailStudentGrade from "./Pages/DetailStudentGrade";
 
 function App() {
   return (
@@ -47,6 +49,11 @@ function App() {
               <Route path="/account/memory" exact>
                 <AppLayout>
                   <AccountMemory />
+                </AppLayout>
+              </Route>
+              <Route path="/account/grade" exact>
+                <AppLayout>
+                  <AccountGrade />
                 </AppLayout>
               </Route>
               <Route path="/account" exact>
@@ -77,6 +84,11 @@ function App() {
               <Route path="/classroom/:id" exact>
                 <AppLayout>
                   <DetailClass />
+                </AppLayout>
+              </Route>
+              <Route path="/classroom/:classId/student/:studentId" exact>
+                <AppLayout>
+                  <DetailStudentGrade />
                 </AppLayout>
               </Route>
               <Route path="/create-class" exact>

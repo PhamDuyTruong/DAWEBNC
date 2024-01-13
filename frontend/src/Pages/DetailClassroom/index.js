@@ -51,7 +51,11 @@ const DetailClass = () => {
   const isTeacher = () => {
     const userInfo = JSON.parse(localStorage.getItem("user"));
     if (classroom.teachers) {
-      return classroom.teachers.find((teacher) => teacher._id === userInfo._id);
+      const check = classroom.teachers.find(
+        (teacher) => teacher.accountId == userInfo._id 
+      );
+      
+      if (check) return true;
     }
     return false;
   };
@@ -101,8 +105,10 @@ const DetailClass = () => {
                 <Tab label="News" {...a11yProps(0)} />
                 <Tab label="Exercises" {...a11yProps(1)} />
                 <Tab label="Grade Structure" {...a11yProps(2)} />
-                <Tab label="Grade Management" {...a11yProps(3)} />
-                <Tab label="People" {...a11yProps(4)} />
+                <Tab label="People" {...a11yProps(3)} />
+                {isTeacher() && (
+                  <Tab label="Grade Management" {...a11yProps(4)} />
+                )}
               </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
@@ -114,14 +120,14 @@ const DetailClass = () => {
             <CustomTabPanel value={value} index={2}>
               <GradeStructure isTeacher={isTeacher} classId={id} />
             </CustomTabPanel>
-            {isTeacher && (
-              <CustomTabPanel value={value} index={3}>
-                <GradeManagement classId={id}  />
-              </CustomTabPanel>
-            )}
-            <CustomTabPanel value={value} index={4}>
+            <CustomTabPanel value={value} index={3}>
               <People classId={id} />
             </CustomTabPanel>
+            {isTeacher() && (
+              <CustomTabPanel value={value} index={4}>
+                <GradeManagement classId={id} />
+              </CustomTabPanel>
+            )}
           </Box>
         </div>
       )}

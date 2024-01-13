@@ -116,17 +116,68 @@ router.post(
 );
 
 // grade structure
-router.post('/:classId/grade-structure', authMiddleware.verifyToken, classController.createGradeStructure);
-router.get('/:classId/grade-structure', authMiddleware.verifyToken, classController.getGradeStructures);
-router.put('/:classId/grade-structure/:id', authMiddleware.verifyToken, classController.updateGradeStructureById);
-router.delete('/:classId/grade-structure/:id', authMiddleware.verifyToken, classController.deleteGradeStructure);
-router.put('/:classId/grade-structure', authMiddleware.verifyToken, classController.updateGradeStructures);
+router.post(
+  "/:classId/grade-structure",
+  authMiddleware.verifyToken,
+  classController.createGradeStructure
+);
+router.get(
+  "/:classId/grade-structure",
+  authMiddleware.verifyToken,
+  classController.getGradeStructures
+);
+router.put(
+  "/:classId/grade-structure/:id",
+  authMiddleware.verifyToken,
+  classController.updateGradeStructureById
+);
+router.delete(
+  "/:classId/grade-structure/:id",
+  authMiddleware.verifyToken,
+  classController.deleteGradeStructure
+);
+router.put(
+  "/:classId/grade-structure",
+  authMiddleware.verifyToken,
+  classController.updateGradeStructures
+);
 
 router.post(
   "/:classId/import-student-list",
   authMiddleware.verifyToken,
   classroomMiddleware.single("grade"),
   classController.uploadStudent
+);
+
+router.put(
+  "/:classId/student/:studentId/assignment/:assignmentId",
+  authMiddleware.verifyToken,
+  classController.updateGrade
+);
+
+router.post(
+  "/:classId/assignment/:assignmentId/import-grade",
+  authMiddleware.verifyToken,
+  classroomMiddleware.single("assignmentGrade"),
+  classController.uploadAssignmentGrade
+);
+
+router.put(
+  "/:classId/student/:studentId/assignment/:assignmentId/mark-finalized",
+  authMiddleware.verifyToken,
+  classController.markGradeFinalized
+);
+
+router.get(
+  "/:classId/student/:studentId",
+  authMiddleware.verifyToken,
+  classController.getStudentInfo
+);
+
+router.get(
+  "/student/:accountId",
+  authMiddleware.verifyToken,
+  classController.getAllJoinedClassByStudentId
 );
 
 module.exports = router;
