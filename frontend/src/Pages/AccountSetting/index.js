@@ -45,9 +45,9 @@ const AccountSetting = () => {
         };
 
         const { data } = await axios.post(url, formData, headers);
-        setFile("http://localhost:5000/" + data.profilePic);
+        setFile("https://winshop-server.onrender.com/" + data.profilePic);
         updatedUser.profilePic =
-          "http://localhost:5000/" + data.profilePic ||
+          "https://winshop-server.onrender.com/" + data.profilePic ||
           userInfo.profilePic;
       } catch (err) {
         console.log(err.response.data);

@@ -56,7 +56,7 @@ const CreateAssignment = () => {
         })
         .then((response) => {
           const { data: filenames } = response;
-          setFiles(filenames.map((item) => `http://localhost:5000/${item}`));
+          setFiles(filenames.map((item) => `https://winshop-server.onrender.com/${item}`));
           Swal.fire({
             title: "Upload Image successfully!",
             text: "Great!",
