@@ -35,6 +35,12 @@ export default function AccountNav() {
         </svg>
         My Memories
       </Link>
+      <Link className={linkClasses('grade')} to={'/account/grade'}>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 21h13.5M5.25 3h13.5M3.75 9h16.5M3.75 15h16.5M3.75 12h16.5" />
+        </svg>
+        My Grades
+      </Link>
     </nav>
   );
 }

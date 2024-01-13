@@ -845,7 +845,18 @@ const classController = {
     } catch (error) {
       res.status(500).json(error);
     }
+  },
+  getAllJoinedClassByStudentId: async (req, res) => {
+    try {
+      const classrooms = await Classroom.find({
+        students: { $elemMatch: { accountId: req.params.accountId } },
+      });
+      res.status(200).json(classrooms);
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
 };
+
 
 module.exports = classController;

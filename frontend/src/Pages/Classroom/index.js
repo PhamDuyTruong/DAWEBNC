@@ -46,7 +46,7 @@ const Classroom = () => {
   };
 
   const menuProps = (item, isCreatedUser) => {
-    console.log(item, userInfo._id);
+    // console.log(item, userInfo._id);
     let items = [];
     if (isCreatedUser) {
       items = [

@@ -174,4 +174,10 @@ router.get(
   classController.getStudentInfo
 );
 
+router.get(
+  "/student/:accountId",
+  authMiddleware.verifyToken,
+  classController.getAllJoinedClassByStudentId
+);
+
 module.exports = router;

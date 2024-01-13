@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 const Exercises = ({ isTeacher, classId }) => {
   const [assignments, setAsssignments] = useState([]);
   const history = useHistory();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   function handleClick() {
     localStorage.setItem("classId", classId);
@@ -52,12 +53,21 @@ const Exercises = ({ isTeacher, classId }) => {
 
   return (
     <>
-      {isTeacher && (
+      {isTeacher() ? (
         <div
           className="border bg-sky-400 w-[200px] cursor-pointer text-white text-center p-2 rounded-full hover:bg-sky-600"
           onClick={handleClick}
         >
           + Create Asssignment
+        </div>
+      ) : (
+        <div
+          className="border w-[200px] cursor-pointer text-blue-500 hover:text-white text-center p-2 rounded-full hover:bg-sky-400"
+          onClick={() => {
+            history.push(`/classroom/${classId}/student/${user.studentId}`);
+          }}
+        >
+          View All Assignment
         </div>
       )}
       {assignments.length > 0 &&

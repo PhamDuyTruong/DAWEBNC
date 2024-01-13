@@ -77,6 +77,9 @@ const classroomApi = {
   getStudentInfo: (classId, studentId) => {
     return axiosClient.get(`/api/classroom/${classId}/student/${studentId}`);
   },
+  getAllJoinedClass: (accountId) => {
+    return axiosClient.get(`/api/classroom/student/${accountId}`);
+  }
 };
 
 export default classroomApi;

@@ -102,7 +102,7 @@ const GradeStructure = ({ isTeacher, classId }) => {
         total sum must be exactly 100%
       </p>
 
-      {isTeacher ? (
+      {isTeacher() ? (
         <>
           <Form form={form} layout="vertical" onFinish={handleSave}>
             <Form.Item label="Grade Name" name="name">
