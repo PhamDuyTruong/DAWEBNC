@@ -5,17 +5,22 @@ import { useParams } from "react-router-dom";
 import assignmentApi from "../../Services/assignmentApi";
 import GradeReview from "./Components/GradeReview";
 import gradeReviewApi from "../../Services/gradeReviewApi";
+import { createNotification } from "../../Actions/NotificationAction";
+import { useDispatch } from "react-redux";
 
 function DetailStudentGrade() {
   const [overallGrade, setOverallGrade] = useState(0);
   const grades = useRef([]);
   const [studentInfo, setStudentInfo] = useState({});
   const [assignments, setAssignments] = useState([]);
+  const [classroom, setClassroom] = useState({});
 
+  const userInfo = JSON.parse(localStorage.getItem("user"));
   const { studentId, classId } = useParams();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
 
   const handleReviewRequest = async (currentGrade, assignment) => {
     // TODO: Send the review request to the server
@@ -38,6 +43,19 @@ function DetailStudentGrade() {
       );
 
       message.success("Review request sent successfully");
+
+      console.log(classroom);
+
+      dispatch(
+        createNotification({
+          image: userInfo.profilePic,
+          senderId: userInfo._id,
+          receiverId: classroom.teachers?.map((teacher) => teacher.accountId),
+          type: "grade",
+          message: `Student ${userInfo.username} has requested a review for assignment ${assignment.title}`,
+          detailPage: `/classroom/${classId}/grade-review/${assignment._id}`,
+        })
+      );
     } catch (error) {
       message.error(error.message);
     }
@@ -72,10 +90,10 @@ function DetailStudentGrade() {
     for (let i = 0; i < grades.current.length; i++) {
       sum += grades.current[i].grade;
 
-      totalMaxGrade += assignments[i].maxPoint;
+      totalMaxGrade += assignments[i]?.maxPoint || 0;
     }
 
-    const overall = (sum / totalMaxGrade) * 100;
+    const overall = totalMaxGrade ? (sum / totalMaxGrade) * 100 : 0;
     setOverallGrade(overall.toFixed(2));
   };
 
@@ -84,13 +102,28 @@ function DetailStudentGrade() {
       const response = await classroomApi.getStudentInfo(classId, studentId);
       const student = response.data;
       grades.current = student.grades;
+      if (student.studentId !== studentId)
+        return message.error(
+          "You are not allowed to view this student's grade"
+        );
       setStudentInfo(student);
     } catch (error) {
       message.error(error.message);
     }
   };
 
+  const getClassroom = async () => {
+    try {
+      const response = await classroomApi.getClassroomById(classId);
+      const classroom = response.data;
+      setClassroom(classroom);
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+
   useEffect(() => {
+    getClassroom();
     getStudentInfo();
     getAssignmentByClass();
   }, []);
@@ -140,7 +173,9 @@ function DetailStudentGrade() {
               <Modal
                 title="Request Review"
                 open={modalVisible}
-                onOk={() => handleReviewRequest(grade.grade, assignments[index])}
+                onOk={() =>
+                  handleReviewRequest(grade.grade, assignments[index])
+                }
                 onCancel={() => setModalVisible(false)}
               >
                 <GradeReview

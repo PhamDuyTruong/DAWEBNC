@@ -33,6 +33,28 @@
     display: none;
 }
 
+.notifications .icon .count{
+    top: 20px !important;
+}
+
+.notifications .container{
+    transform: translate(-410px, 30px) !important;
+}
+
+.notifications .container .content{
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+}
+
+.notifications .container .card{
+    
+    box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+
+}
+
 .sticky__header {
     width: 100%;
     height: 110px;

@@ -89,7 +89,7 @@ router.get(
   classController.checkClassJoined
 );
 router.post(
-  "/:id/accept/code",
+  "/accept/code",
   authMiddleware.verifyToken,
   classController.joinClassViaCode
 );

@@ -5,15 +5,22 @@ import classroomApi from "../../Services/classroomApi";
 import { Divider, message } from "antd";
 import CommentSection from "./Components/CommentSection";
 import { Button } from "antd";
+import { createNotification } from "../../Actions/NotificationAction";
+import { useDispatch } from "react-redux";
 
 function DetailGradeReview() {
   const { classId, id } = useParams();
 
   const [review, setReview] = useState({});
   const [student, setStudent] = useState({});
+  const [classroom, setClassroom] = useState({});
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getGradeReviewById();
+    getClassroom();
   }, []);
 
   const getGradeReviewById = async () => {
@@ -37,6 +44,28 @@ function DetailGradeReview() {
     }
   };
 
+  const getClassroom = async () => {
+    try {
+      const response = await classroomApi.getClassroomById(classId);
+      const data = response.data;
+      setClassroom(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const isTeacher = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (classroom.teachers) {
+      const check = classroom.teachers.find(
+        (teacher) => teacher.accountId == user._id
+      );
+      if (check) return true;
+    }
+
+    return false;
+  };
+
   const updateStatus = async (status) => {
     try {
       const response = await gradeReviewApi.updateGradeReviewStatus(id, status);
@@ -51,6 +80,18 @@ function DetailGradeReview() {
           );
 
           message.success("Grade finalized");
+
+          // Create notification on final decision on mark review
+          dispatch(
+            createNotification({
+              image: user.profilePic,
+              senderId: user._id,
+              receiverId: [student.accountId],
+              type: "grade",
+              message: `Your grade for assignment ${review.assignmentId.title} has been finalized`,
+              detailPage: `/classroom/${classroom._id}/grade-review/${review._id}`,
+            })
+          );
         } catch (error) {
           message.error(error.message);
         }
@@ -117,7 +158,7 @@ function DetailGradeReview() {
                 <span className="text-lg">{review.status?.toUpperCase()}</span>
               </div>
 
-              {review.status === "pending" && (
+              {isTeacher() && review.status === "pending" && (
                 <div className="flex gap-2">
                   <Button
                     type="primary"
@@ -139,7 +180,13 @@ function DetailGradeReview() {
         </div>
       </div>
 
-      <CommentSection review={review} setReview={setReview} />
+      <CommentSection
+        isTeacher={isTeacher}
+        student={student}
+        classroom={classroom}
+        review={review}
+        setReview={setReview}
+      />
     </div>
   );
 }

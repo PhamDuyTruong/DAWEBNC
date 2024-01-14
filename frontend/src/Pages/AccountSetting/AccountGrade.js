@@ -11,6 +11,7 @@ function AccountGrade() {
 
   useEffect(() => {
     getAllJoinedClass();
+    console.log(userInfo);
   }, []);
 
   const getAllJoinedClass = async () => {

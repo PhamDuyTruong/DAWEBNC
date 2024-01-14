@@ -71,7 +71,7 @@ const GradeManagement = ({ classId }) => {
       const studentGrade = student.grades.find(
         (grade) => grade.assignmentId == selectedDownloadAssignmentId
       );
-      return [student.studentId, studentGrade.grade];
+      return [student.studentId, studentGrade?.grade];
     });
     data.unshift(headers);
 
