@@ -13,7 +13,7 @@ const notificationController = {
     getNotificationByUser: async (req, res) => {
         try {
             const notification = await Notification.find({
-                receiverId: req.params.id,
+                receiverId: { $in: [req.params.id]}
             });
             if (!notification) {
                 return res.status(404).json({

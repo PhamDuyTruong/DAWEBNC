@@ -2,16 +2,45 @@ import React, { useState, useEffect } from "react";
 import { List, Input, Button, message } from "antd";
 import { Comment } from "@ant-design/compatible";
 import gradeReviewApi from "../../../Services/gradeReviewApi";
+import { createNotification } from "../../../Actions/NotificationAction";
+import { useDispatch } from "react-redux";
 
-const CommentSection = ({ review, setReview }) => {
+const CommentSection = ({ isTeacher, student, classroom, review, setReview }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user"));
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setComments(review?.feedback || []);
   }, [review]);
+
+  const handleNotification = async () => {
+    if (isTeacher()) {
+      dispatch(
+        createNotification({
+          image: user.profilePic,
+          senderId: user._id,
+          receiverId: [student.accountId],
+          type: "grade",
+          message: `Teacher ${user.username} has replied to your review request`,
+          detailPage: `/classroom/${classroom._id}/grade-review/${review._id}`,
+        })
+      );
+    } else {
+      dispatch(
+        createNotification({
+          image: user.profilePic,
+          senderId: user._id,
+          receiverId: classroom.teachers?.map((teacher) => teacher.accountId),
+          type: "grade",
+          message: `Student ${user.username} has replied to your review request`,
+          detailPage: `/classroom/${classroom._id}/grade-review/${review._id}`,
+        })
+      );
+    }
+  };
 
   const handleCommentSubmit = async () => {
     console.log(review);
@@ -37,6 +66,9 @@ const CommentSection = ({ review, setReview }) => {
         },
       ]);
       setNewComment("");
+
+      // Create notification
+      handleNotification();
     } catch (error) {
       message.error(error.message);
     }

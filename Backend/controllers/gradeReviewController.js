@@ -24,11 +24,11 @@ const gradeReviewController = {
 
     try {
       const gradeReviews = await GradeReview.find({ classroomId });
-      res.status(200).json(
-        gradeReviews.sort((n1, n2) => {
-          return new Date(n2.createdAt) - new Date(n1.createdAt);
-        })
-      );
+      gradeReviews.sort((n1, n2) => {
+        return new Date(n2.createdAt) - new Date(n1.createdAt);
+      });
+
+      res.status(200).json(gradeReviews);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -37,14 +37,11 @@ const gradeReviewController = {
     const { id } = req.params;
 
     try {
-      const gradeReview = await GradeReview.findById(id).populate(
-        "feedback.userId"
-      );
-      res.status(200).json(
-        gradeReview.sort((n1, n2) => {
-          return new Date(n2.createdAt) - new Date(n1.createdAt);
-        })
-      );
+      const gradeReview = await GradeReview.findById(id)
+        .populate("assignmentId")
+        .populate("feedback.userId");
+
+      res.status(200).json(gradeReview);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
