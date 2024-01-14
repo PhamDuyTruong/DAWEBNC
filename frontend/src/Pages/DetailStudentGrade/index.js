@@ -72,10 +72,10 @@ function DetailStudentGrade() {
     for (let i = 0; i < grades.current.length; i++) {
       sum += grades.current[i].grade;
 
-      totalMaxGrade += assignments[i].maxPoint || 0;
+      totalMaxGrade += assignments[i]?.maxPoint || 0;
     }
 
-    const overall = (sum / totalMaxGrade) * 100;
+    const overall = totalMaxGrade ? (sum / totalMaxGrade) * 100 : 0;
     setOverallGrade(overall.toFixed(2));
   };
 

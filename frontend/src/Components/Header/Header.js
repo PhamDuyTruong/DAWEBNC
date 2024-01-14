@@ -8,6 +8,7 @@ import Wishlist from "../Wishlist";
 import { BiBook } from "react-icons/bi";
 import logo from "../../Assets/images/Logo.jpg";
 import Notifications from "react-notifications-menu";
+import { getNotifications } from "../../Actions/NotificationAction";
 
 const nav_links = [
   {
@@ -55,7 +56,11 @@ const Header = () => {
   //   return window.removeEventListener("scroll", stickyHeaderFunction);
   // }, []);
 
-  const data = [];
+  useEffect(() => {
+    dispatch(getNotifications(userInfo ? userInfo._id : ""));
+  }, []);
+
+  const { notifications } = useSelector((state) => state.notification);
 
   const toggleMenu = () => {
     menuRef.current.classList.toggle("show__menu");
@@ -108,16 +113,11 @@ const Header = () => {
                   <>
                     <div style={{ marginBottom: 50 }}>
                       <Notifications
-                        data={data}
+                        data={notifications}
+                        viewAllbtn={{ text: "see all", linkTo: "/seeAll" }}
                         header={{
                           title: "Notifications",
-                          option: {
-                            text: "View All",
-                            onClick: () => console.log("Clicked"),
-                          },
-                        }}
-                        markAsRead={(data) => {
-                          console.log(data);
+                          option: { text: "View All", onClick: () => {} },
                         }}
                       />
                     </div>

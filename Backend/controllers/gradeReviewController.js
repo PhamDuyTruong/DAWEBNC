@@ -24,7 +24,11 @@ const gradeReviewController = {
 
     try {
       const gradeReviews = await GradeReview.find({ classroomId });
-      res.status(200).json(gradeReviews);
+      res.status(200).json(
+        gradeReviews.sort((n1, n2) => {
+          return new Date(n2.createdAt) - new Date(n1.createdAt);
+        })
+      );
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -33,8 +37,14 @@ const gradeReviewController = {
     const { id } = req.params;
 
     try {
-      const gradeReview = await GradeReview.findById(id).populate("feedback.userId");
-      res.status(200).json(gradeReview);
+      const gradeReview = await GradeReview.findById(id).populate(
+        "feedback.userId"
+      );
+      res.status(200).json(
+        gradeReview.sort((n1, n2) => {
+          return new Date(n2.createdAt) - new Date(n1.createdAt);
+        })
+      );
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

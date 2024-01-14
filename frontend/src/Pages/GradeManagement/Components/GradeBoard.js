@@ -3,6 +3,9 @@ import { Table, InputNumber, message, Form, Typography, Dropdown } from "antd";
 import classrommApi from "../../../Services/classroomApi";
 import { CheckOutlined, EllipsisOutlined } from "@ant-design/icons";
 import assignmentApi from "../../../Services/assignmentApi";
+import { createNotification } from "../../../Actions/NotificationAction";
+import { useDispatch } from "react-redux";
+import { user } from "../../../utils/customUser";
 
 const GradeBoard = ({
   classroom,
@@ -14,6 +17,8 @@ const GradeBoard = ({
   const [editingRecord, setEditingRecord] = useState({});
   const [editingAssignment, setEditingAssignment] = useState({});
   const [loadingGrade, setLoadingGrade] = useState(false);
+  const userInfo = JSON.parse(localStorage.getItem("user"));
+  const dispatch = useDispatch();
 
   const menuProps = (record, assignment, grade, isFinal) => {
     const items = [
@@ -22,7 +27,7 @@ const GradeBoard = ({
         key: "0",
         icon: <CheckOutlined />,
         onClick: () => {
-          handleFinalGradeMarked(record.studentId, assignment._id, grade);
+          handleFinalGradeMarked(record, assignment, grade);
         },
         disabled: isFinal,
       },
@@ -46,8 +51,12 @@ const GradeBoard = ({
     }
   };
 
-  const handleFinalGradeMarked = async (studentId, assignmentId, grade) => {
+  const handleFinalGradeMarked = async (record, assignment, grade) => {
     setLoadingGrade(true);
+    const { _id, title } = assignment;
+    const { studentId, accountId } = record;
+    const assignmentId = _id;
+
     try {
       const response = await classrommApi.markGradeFinalized(
         classroom._id,
@@ -57,6 +66,18 @@ const GradeBoard = ({
       );
       setClassroom(response.data);
       getAssignmentByClass();
+      
+      // Create notification
+      dispatch(
+        createNotification({
+          image: userInfo.profilePic,
+          senderId: userInfo._id,
+          receiverId: [accountId],
+          type: "grade",
+          message: `Your grade for assigment ${title} has been finalized`,
+          detailPage: `/classroom/${classroom._id}/student/${studentId}`,
+        })
+      );
     } catch (error) {
       message.error(error.response.data.message);
     } finally {
@@ -140,7 +161,6 @@ const GradeBoard = ({
       dataIndex: assignment._id,
       key: assignment._id,
       render: (text, record) => {
-
         const { tempGrade, grade, isFinal } = record.grades[index] || {};
 
         const gradeCell = isFinal ? grade : tempGrade;

@@ -821,10 +821,6 @@ const classController = {
 
       const updatedClass = await classroom.save();
 
-      req.io.emit("grade-finalized", {
-        message: "The grade composition has been finalized.",
-      });
-
       res.status(200).json(updatedClass);
     } catch (error) {
       res.status(500).json(error);
