@@ -101,6 +101,10 @@ const studentSchema = new mongoose.Schema({
         type: Number,
         default: null,
       },
+      weight: {
+        type: Number,
+        default: null,
+      },
     },
   ],
 });

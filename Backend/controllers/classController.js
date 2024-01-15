@@ -55,8 +55,7 @@ const classController = {
       }
 
       const classWithPopulate = await classroom.populate(
-        "students.accountId",
-        "teachers.accountId"
+        "students.grades.assignmentId"
       );
       res.status(200).json(classWithPopulate);
     } catch (error) {
@@ -685,6 +684,8 @@ const classController = {
 
     try {
       classroom.students.push(...newStudents);
+
+      await classroom.populate("students.grades.assignmentId");
       await classroom.save();
       res.status(200).json(classroom);
     } catch (error) {
@@ -692,7 +693,8 @@ const classController = {
     }
   },
   updateGrade: async (req, res) => {
-    const classroom = await Classroom.findById(req.params.classId);
+    let classroom = await Classroom.findById(req.params.classId);
+
     if (!classroom) {
       return res.status(404).json({
         success: false,
@@ -722,13 +724,16 @@ const classController = {
       if (!grade) {
         student.grades.push({
           assignmentId: assignmentId,
+          grade: newGrade,
           tempGrade: newGrade,
+          isFinal: false,
         });
       } else {
         grade.tempGrade = newGrade;
         grade.isFinal = false;
       }
 
+      await classroom.populate("students.grades.assignmentId");
       await classroom.save();
       res.status(200).json(classroom);
     } catch (error) {
@@ -778,6 +783,7 @@ const classController = {
         ).clone();
       }
 
+      await classroom.populate("students.grades.assignmentId");
       const updatedClass = await classroom.save();
       res.status(200).json(updatedClass);
     } catch (error) {
@@ -819,6 +825,7 @@ const classController = {
         }
       ).clone();
 
+      await classroom.populate("students.grades.assignmentId");
       const updatedClass = await classroom.save();
 
       res.status(200).json(updatedClass);
@@ -835,6 +842,8 @@ const classController = {
           message: "Classroom not found !!!",
         });
       }
+
+      await classroom.populate("students.grades.assignmentId");
 
       const student = classroom.students.find(
         (student) => student.studentId == req.params.studentId

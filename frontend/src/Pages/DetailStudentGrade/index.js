@@ -82,19 +82,39 @@ function DetailStudentGrade() {
   };
 
   const getOverallGrade = () => {
-    let sum = 0;
-    let totalMaxGrade = 0;
+    if (!studentInfo || !classroom) return;
 
-    if (!grades.current.length) return 0;
+    const gradeCompositionTotalGrade = {};
+    const gradeCompositionTotalCount = {};
 
-    for (let i = 0; i < grades.current.length; i++) {
-      sum += grades.current[i].grade;
+    grades.current.forEach((grade) => {
+      const { assignmentId } = grade;
+      const { gradeComposition } = assignmentId;
 
-      totalMaxGrade += assignments[i]?.maxPoint || 0;
-    }
+      if (!gradeComposition) return;
 
-    const overall = totalMaxGrade ? (sum / totalMaxGrade) * 100 : 0;
-    setOverallGrade(overall.toFixed(2));
+      if (!gradeCompositionTotalGrade[gradeComposition._id]) {
+        gradeCompositionTotalGrade[gradeComposition._id] = 0;
+        gradeCompositionTotalCount[gradeComposition._id] = 0;
+      }
+      gradeCompositionTotalGrade[gradeComposition._id] += grade.grade;
+      gradeCompositionTotalCount[gradeComposition._id] += 1;
+    });
+
+    const totalGrade = Object.entries(gradeCompositionTotalGrade).reduce(
+      (sum, [gradeCompositionId, grade]) => {
+        const gradeComposition = classroom.gradeComposition.find(
+          (gradeComposition) => gradeComposition._id == gradeCompositionId
+        );
+        return (
+          sum +
+          (grade / gradeCompositionTotalCount[gradeCompositionId]) *
+            (gradeComposition.weight / 100)
+        );
+      },
+      0
+    );
+    setOverallGrade(totalGrade.toFixed(2));
   };
 
   const getStudentInfo = async () => {
@@ -146,7 +166,7 @@ function DetailStudentGrade() {
           </div>
           <div className="text-xl font-semibold">
             Overall Grade:{" "}
-            <span className=" text-blue-500">{overallGrade}%</span>
+            <span className=" text-blue-500">{overallGrade}</span>
           </div>
         </div>
         <Divider className=" bg-blue-400" />
@@ -160,7 +180,7 @@ function DetailStudentGrade() {
               <div className="flex flex-col gap-1">
                 <h4>{assignments[index]?.title}</h4>
                 <span className="text-xs text-gray-400">
-                  {assignments[index]?.gradeComposition ||
+                  {assignments[index]?.gradeComposition.name ||
                     "No grade composition"}
                 </span>
               </div>

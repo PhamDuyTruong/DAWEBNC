@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const gradeCompositionSchema = require("./GradeComposition");
 
 const assignmentSchema = new mongoose.Schema({
     title: {
@@ -28,9 +29,7 @@ const assignmentSchema = new mongoose.Schema({
     //     type: mongoose.Schema.ObjectId,
     //     ref: "GradeComposition",
     // },
-    gradeComposition: {
-        type: String,
-    },
+    gradeComposition: gradeCompositionSchema,
     maxPoint: {
         type: Number,
         required: true,
