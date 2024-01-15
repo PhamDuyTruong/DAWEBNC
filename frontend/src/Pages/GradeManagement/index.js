@@ -69,7 +69,7 @@ const GradeManagement = ({ classId }) => {
     const headers = ["studentId", "grade"];
     const data = classroom.students.map((student) => {
       const studentGrade = student.grades.find(
-        (grade) => grade.assignmentId == selectedDownloadAssignmentId
+        (grade) => grade.assignmentId._id == selectedDownloadAssignmentId
       );
       return [student.studentId, studentGrade?.grade];
     });
