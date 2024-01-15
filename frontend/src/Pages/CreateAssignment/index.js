@@ -53,7 +53,11 @@ const CreateAssignment = () => {
         })
         .then((response) => {
           const { data: filenames } = response;
-          setFiles(filenames.map((item) => `http://localhost:5000/${item}`));
+          setFiles(
+            filenames.map(
+              (item) => `https://elearning-g2i8.onrender.com/${item}`
+            )
+          );
           Swal.fire({
             title: "Upload Image successfully!",
             text: "Great!",
@@ -79,7 +83,9 @@ const CreateAssignment = () => {
         .then((response) => {
           const { data: filenames } = response;
           setDocuments(
-            filenames.map((item) => `http://localhost:5000/${item}`)
+            filenames.map(
+              (item) => `https://elearning-g2i8.onrender.com/${item}`
+            )
           );
           Swal.fire({
             title: "Upload Documents successfully!",
