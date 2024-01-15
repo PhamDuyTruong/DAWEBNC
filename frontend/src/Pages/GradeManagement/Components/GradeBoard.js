@@ -5,7 +5,7 @@ import { CheckOutlined, EllipsisOutlined } from "@ant-design/icons";
 import assignmentApi from "../../../Services/assignmentApi";
 import { createNotification } from "../../../Actions/NotificationAction";
 import { useDispatch } from "react-redux";
-import { user } from "../../../utils/customUser";
+import logo from "../../../Assets/images/Logo.jpg";
 
 const GradeBoard = ({
   classroom,
@@ -66,7 +66,7 @@ const GradeBoard = ({
       );
       setClassroom(response.data);
       getAssignmentByClass();
-      
+
       // Create notification
       dispatch(
         createNotification({
@@ -141,11 +141,45 @@ const GradeBoard = ({
       title: "Total Grade",
       key: "totalGrade",
       render: (_, record) => {
-        const totalGrade = record.grades.reduce(
-          (sum, studentGrade) => sum + (studentGrade?.grade || 0),
+        // total grade by weight (percent)
+        console.log(record);
+        // const totalGrade = record.grades.reduce(
+        //   (sum, grade) => sum + (grade.grade || 0) * (grade.assignmentId?.gradeComposition?.weight / 100),
+        //   0
+        // );
+
+        const gradeCompositionTotalGrade = {};
+        const gradeCompositionTotalCount = {};
+
+        record.grades.forEach((grade) => {
+          const { assignmentId } = grade;
+          const { gradeComposition } = assignmentId;
+
+          if (!gradeComposition) return;
+
+          if (!gradeCompositionTotalGrade[gradeComposition._id]) {
+            gradeCompositionTotalGrade[gradeComposition._id] = 0;
+            gradeCompositionTotalCount[gradeComposition._id] = 0;
+          }
+          gradeCompositionTotalGrade[gradeComposition._id] += grade.grade;
+          gradeCompositionTotalCount[gradeComposition._id] += 1;
+        });
+
+        const totalGrade = Object.entries(gradeCompositionTotalGrade).reduce(
+          (sum, [gradeCompositionId, grade]) => {
+            const gradeComposition = classroom.gradeComposition.find(
+              (gradeComposition) => gradeComposition._id == gradeCompositionId
+            );
+            return (
+              sum +
+              (grade / gradeCompositionTotalCount[gradeCompositionId]) *
+                (gradeComposition.weight / 100)
+            );
+          },
           0
         );
-        return totalGrade;
+
+        return <Typography.Text>{totalGrade.toFixed(2)}</Typography.Text>;
       },
     },
     ...assignments.map((assignment, index) => ({
@@ -154,7 +188,7 @@ const GradeBoard = ({
           <span>{assignment.title}</span>
           <hr />
           <span className="text-xs text-gray-400">
-            {assignment.gradeComposition} / {assignment.maxPoint}{" "}
+            {assignment.gradeComposition?.name} / {assignment.maxPoint}{" "}
           </span>
         </div>
       ),
@@ -165,7 +199,7 @@ const GradeBoard = ({
 
         const gradeCell = isFinal ? grade : tempGrade;
 
-        return record.fullname !== "Total Grade" ? (
+        return record.fullname !== "Total grade" ? (
           <div>
             <div className="flex flex-col gap-1">
               <InputNumber
@@ -226,10 +260,10 @@ const GradeBoard = ({
     const totalGrades = {};
     classroom?.students?.forEach((student) => {
       student.grades.forEach((grade) => {
-        if (!totalGrades[grade.assignmentId]) {
-          totalGrades[grade.assignmentId] = 0;
+        if (!totalGrades[grade.assignmentId._id]) {
+          totalGrades[grade.assignmentId._id] = 0;
         }
-        totalGrades[grade.assignmentId] += grade.grade || 0;
+        totalGrades[grade.assignmentId._id] += grade.grade || 0;
       });
     });
 
@@ -239,8 +273,8 @@ const GradeBoard = ({
   const studentsWithTotal = useMemo(() => {
     const total = {
       studentId: "",
-      fullname: "Total Grade",
-      profilePic: null,
+      fullname: "Total grade",
+      profilePic: logo,
       grades: Object.entries(totalGradesByAssignment).map(
         ([assignmentId, totalGrade]) => ({
           assignmentId,

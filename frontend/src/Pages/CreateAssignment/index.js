@@ -16,16 +16,13 @@ const CreateAssignment = () => {
   const [date, setDate] = React.useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [gradeComposition, setGradeComposition] = useState({
-    name: "",
-  });
+  const [gradeComposition, setGradeComposition] = useState({});
   const [maxPoint, setMaxPoint] = useState(100);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const classId = localStorage.getItem("classId") || "";
   const [classroom, setClassroom] = useState({});
-
 
   useEffect(() => {
     handleGetClassroom();
@@ -36,8 +33,8 @@ const CreateAssignment = () => {
     try {
       const response = await classroomApi.getClassroomById(classId);
       const data = response.data;
-
       setClassroom(data);
+      setGradeComposition(data.gradeComposition[0]);
     } catch (error) {
       console.log(error);
     }
@@ -104,7 +101,7 @@ const CreateAssignment = () => {
       image: files[0] || "",
       document: documents || [],
       classroom: classId || "",
-      gradeComposition: gradeComposition.name || "",
+      gradeComposition: gradeComposition || {},
       maxPoint: maxPoint || 0,
     };
     try {
@@ -127,7 +124,7 @@ const CreateAssignment = () => {
 
   const handleChange = (e) => {
     e.preventDefault();
-    setGradeComposition((prev) => ({ ...prev, name: e.target.value }));
+    setGradeComposition(e.target.value);
   };
 
   return (
@@ -211,16 +208,12 @@ const CreateAssignment = () => {
           <div className="flex items-center justify-start gap-4">
             <Box sx={{ minWidth: "200px" }}>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={gradeComposition.name}
-                label="grade"
-                displayEmpty
+                value={gradeComposition}
                 onChange={handleChange}
+                placeholder="Select a composition"
               >
-                <MenuItem value="">No grade composition selected</MenuItem>
                 {classroom?.gradeComposition?.map((item) => (
-                  <MenuItem value={item.name}>{item.name}</MenuItem>
+                  <MenuItem value={item}>{item.name}</MenuItem>
                 ))}
               </Select>
             </Box>
