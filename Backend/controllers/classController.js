@@ -800,6 +800,8 @@ const classController = {
         });
       }
 
+      await classroom.populate("students.grades.assignmentId");
+
       await Classroom.findOneAndUpdate(
         {
           _id: req.params.classId,
@@ -825,7 +827,6 @@ const classController = {
         }
       ).clone();
 
-      await classroom.populate("students.grades.assignmentId");
       const updatedClass = await classroom.save();
 
       res.status(200).json(updatedClass);
