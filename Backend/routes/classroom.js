@@ -180,4 +180,10 @@ router.get(
   classController.getAllJoinedClassByStudentId
 );
 
+router.put(
+  "/:classId/grade-structure/:id/mark-finalized",
+  authMiddleware.verifyToken,
+  classController.markGradeCompositionFinalized
+);
+
 module.exports = router;

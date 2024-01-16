@@ -76,7 +76,7 @@ const People = ({ classId }) => {
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(
-      `https://edulearning.vercel.app/classroom/${classroom._id}/join/link?cjc=${classroom.invitationCode}`
+      `http://localhost:3000/classroom/${classroom._id}/join/link?cjc=${classroom.invitationCode}`
     );
     message.success("Copied to clipboard");
   };
@@ -242,7 +242,7 @@ const People = ({ classId }) => {
         <span className="mt-8 font-semibold">Invitation link</span>
         <div className="flex items-baseline -mt-2 space-y-2">
           <div className="truncate">
-            https://edulearning.vercel.app/classroom/{classroom._id}
+            http://localhost:3000/classroom/{classroom._id}
             /join/link?cjc=
             {classroom.invitationCode}
           </div>

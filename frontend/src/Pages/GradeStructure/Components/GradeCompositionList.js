@@ -9,13 +9,21 @@ import { CloseOutlined } from "@ant-design/icons";
 const DragHandle = SortableHandle(() => <span>::</span>);
 
 const GradeCompositionItem = SortableElement(
-  ({ item, index, editingId, handleDelete, handleEdit }) => (
+  ({ item, index, editingId, handleFinalized, handleDelete, handleEdit }) => (
     <List.Item
       className="w-full bg-white/10 flex items-center gap-2"
       key={`item-${index}`}
       actions={[
+        <Popconfirm
+          title="Are you sure to finalize this grade structure?"
+          onConfirm={() => handleFinalized(item)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button type="primary">Finalize</Button>
+        </Popconfirm>,
         <a onClick={() => handleEdit(item)}>
-          {editingId === item._id ? (
+          {editingId == item._id ? (
             <Button type="dashed">Editing..</Button>
           ) : (
             <Button type="default">Edit</Button>
@@ -44,7 +52,7 @@ const GradeCompositionItem = SortableElement(
 );
 
 const GradeCompositionList = SortableContainer(
-  ({ items, editingId, handleEdit, handleDelete }) => {
+  ({ items, editingId, handleFinalized, handleEdit, handleDelete }) => {
     return (
       <List
         dataSource={items}
@@ -53,6 +61,7 @@ const GradeCompositionList = SortableContainer(
             key={`item-${index}`}
             index={index}
             editingId={editingId}
+            handleFinalized={handleFinalized}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
             item={item}

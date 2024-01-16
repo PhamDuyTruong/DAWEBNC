@@ -65,7 +65,6 @@ const GradeBoard = ({
         grade
       );
       setClassroom(response.data);
-      getAssignmentByClass();
 
       // Create notification
       dispatch(

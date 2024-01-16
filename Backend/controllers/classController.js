@@ -390,7 +390,7 @@ const classController = {
     );
 
     const subject = `ELearning - Lời mời tham gia lớp học: "${classroom.name}"`;
-    const link = `https://elearning-g2i8.onrender.com/api/classroom/email/redirect?token=${token}`;
+    const link = `http://localhost:5000/api/classroom/email/redirect?token=${token}`;
 
     const html = `
     <p>Chào bạn <b>${req.user.username}</b>,</p>
@@ -431,7 +431,7 @@ const classController = {
       }
 
       res.redirect(
-        `https://edulearning.vercel.app/classroom/invite/accept_token/${classroom._id}?token=${token}&role=${decoded.role}`
+        `http://localhost:3000/classroom/invite/accept_token/${classroom._id}?token=${token}&role=${decoded.role}`
       );
     } catch (error) {
       res.status(500).json(error);
@@ -829,6 +829,45 @@ const classController = {
       const updatedClass = await classroom.save();
 
       res.status(200).json(updatedClass);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  markGradeCompositionFinalized: async (req, res) => {
+    try {
+      let classroom = await Classroom.findById(req.params.classId);
+      if (!classroom) {
+        return res.status(404).json({
+          success: false,
+          message: "Classroom not found !!!",
+        });
+      }
+
+      await classroom.populate("students.grades.assignmentId");
+
+      const gradeCompositionId = req.params.id;
+
+      const students = classroom.students;
+      const updatedStudents = [];
+
+      for (let student of students) {
+        const grade = student.grades.find(
+          (grade) =>
+            grade.assignmentId?.gradeComposition?._id == gradeCompositionId
+        );
+
+        if (!grade) {
+          continue;
+        }
+
+        grade.isFinal = true;
+        grade.grade = grade.tempGrade;
+        updatedStudents.push(student);
+      }
+
+      await classroom.save();
+
+      res.status(200).json(updatedStudents);
     } catch (error) {
       res.status(500).json(error);
     }

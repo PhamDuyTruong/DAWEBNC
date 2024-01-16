@@ -1,7 +1,7 @@
 import axios from "axios";
-//https://elearning-g2i8.onrender.com
+//http://localhost:5000
 const instance = axios.create({
-  baseURL: "https://elearning-g2i8.onrender.com/api",
+  baseURL: "http://localhost:5000/api",
 });
 
 export default instance;
