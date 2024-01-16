@@ -833,6 +833,45 @@ const classController = {
       res.status(500).json(error);
     }
   },
+  markGradeCompositionFinalized: async (req, res) => {
+    try {
+      let classroom = await Classroom.findById(req.params.classId);
+      if (!classroom) {
+        return res.status(404).json({
+          success: false,
+          message: "Classroom not found !!!",
+        });
+      }
+
+      await classroom.populate("students.grades.assignmentId");
+
+      const gradeCompositionId = req.params.id;
+
+      const students = classroom.students;
+      const updatedStudents = [];
+
+      for (let student of students) {
+        const grade = student.grades.find(
+          (grade) =>
+            grade.assignmentId?.gradeComposition?._id == gradeCompositionId
+        );
+
+        if (!grade) {
+          continue;
+        }
+
+        grade.isFinal = true;
+        grade.grade = grade.tempGrade;
+        updatedStudents.push(student);
+      }
+
+      await classroom.save();
+
+      res.status(200).json(updatedStudents);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
   getStudentInfo: async (req, res) => {
     try {
       const classroom = await Classroom.findById(req.params.classId);

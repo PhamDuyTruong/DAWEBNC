@@ -3,13 +3,17 @@ import { Button, Input, Form, message, InputNumber, List } from "antd";
 import gradeApi from "../../Services/gradeApi";
 import { arrayMoveImmutable } from "array-move";
 import GradeCompositionList from "./Components/GradeCompositionList";
+import { createNotification } from "../../Actions/NotificationAction";
+import { useDispatch } from "react-redux";
 
 const GradeStructure = ({ isTeacher, classId }) => {
   const [form] = Form.useForm();
   const [gradeStructures, setGradeStructures] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalWeight, setTotalWeight] = useState(0);
-  const editingId = useRef(null);
+  const [editingId, setEditingId] = useState(null);
+  const userInfo = JSON.parse(localStorage.getItem("user"));
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchGradeStructures();
@@ -17,7 +21,7 @@ const GradeStructure = ({ isTeacher, classId }) => {
 
   const getOriginWeight = (data) => {
     const weight = data.reduce((acc, cur) => {
-      if (cur._id == editingId.current) return acc;
+      if (cur._id == editingId) return acc;
       return acc + cur.weight;
     }, 0);
 
@@ -38,12 +42,38 @@ const GradeStructure = ({ isTeacher, classId }) => {
     }
   };
 
-  const handleSave = async (values) => {
-    setLoading(true);
+  const handleGradeCompositionFinalized = async (item) => {
     try {
-      if (editingId.current) {
-        await gradeApi.updateGradeStructureById(classId,  editingId.current, values);
-        editingId.current = null;
+      const response = await gradeApi.markGradeCompositionFinalized(
+        classId,
+        item._id
+      );
+      message.success("Successfully finalized the grade");
+
+      // create notification for all students
+      const students = response.data;
+      for (let student of students) {
+        dispatch(
+          createNotification({
+            image: userInfo.profilePic,
+            senderId: userInfo._id,
+            receiverId: [student.accountId],
+            type: "grade",
+            message: `Your teacher has finalized the grade composition ${item.name}`,
+            detailPage: `/classroom/${classId}/student/${student.studentId}`,
+          })
+        );
+      }
+    } catch (error) {
+      message.error(error.response?.data?.message);
+    }
+  };
+
+  const handleSave = async (values) => {
+    try {
+      if (editingId) {
+        await gradeApi.updateGradeStructureById(classId, editingId, values);
+        setEditingId(null);
         fetchGradeStructures();
       } else {
         await gradeApi.createGradeStructure(classId, values);
@@ -55,13 +85,12 @@ const GradeStructure = ({ isTeacher, classId }) => {
       message.error(error.response.data.message);
     } finally {
       form.resetFields();
-      setLoading(false);
     }
   };
 
   const handleEdit = (gradeComposition) => {
     setTotalWeight(getOriginWeight(gradeStructures));
-    editingId.current = gradeComposition._id;
+    setEditingId(gradeComposition._id);
     form.setFieldsValue(gradeComposition);
   };
 
@@ -120,7 +149,7 @@ const GradeStructure = ({ isTeacher, classId }) => {
                 type="default"
                 className="mr-2"
                 onClick={() => {
-                  editingId.current = null;
+                  setEditingId(null);
                   form.resetFields();
                 }}
               >
@@ -144,6 +173,7 @@ const GradeStructure = ({ isTeacher, classId }) => {
           <GradeCompositionList
             items={gradeStructures}
             editingId={editingId}
+            handleFinalized={handleGradeCompositionFinalized}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
             onSortEnd={onSortEnd}

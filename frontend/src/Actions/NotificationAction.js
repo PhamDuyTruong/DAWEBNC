@@ -21,6 +21,7 @@ export const getNotifications = (receiverId) => {
 };
 
 export const createNotification = (value) => {
+  console.log(value);
   return async (dispatch) => {
     dispatch({ type: CREATE_NOTIFICATION_REQUEST });
     try {

@@ -91,7 +91,6 @@ const studentSchema = new mongoose.Schema({
       assignmentId: {
         type: mongoose.Schema.ObjectId,
         ref: "Assignment",
-        required: true,
       },
       isFinal: {
         type: Boolean,
