@@ -75,7 +75,7 @@ function DetailGradeReview() {
           await classroomApi.markGradeFinalized(
             classId,
             review.studentId,
-            review.assignmentId,
+            review.assignmentId._id,
             review.grade
           );
 
