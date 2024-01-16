@@ -32,15 +32,17 @@ function DetailStudentGrade() {
         grade,
         comment,
         currentGrade,
-        gradeComposition: assignment.gradeComposition,
+        gradeComposition: assignment.gradeComposition.name,
       };
 
-      const gradeReview = await gradeReviewApi.createGradeReview(
+      const response = await gradeReviewApi.createGradeReview(
         studentId,
         classId,
         assignment._id,
         newReviewRequest
       );
+
+      const gradeReview = response.data;
 
       message.success("Review request sent successfully");
 
