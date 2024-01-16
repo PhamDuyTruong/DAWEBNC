@@ -6,8 +6,6 @@ import Home from "./Pages/Home/Home";
 import PrevFilterContext from "./context/PrevFilterContext";
 import Signin from "./Pages/Signin";
 import Signup from "./Pages/Signup";
-import AccountBooking from "./Pages/AccountSetting/AccountBooking";
-import AccountMemory from "./Pages/AccountSetting/AccountMemory";
 import AccountSetting from "./Pages/AccountSetting";
 import AccountGrade from "./Pages/AccountSetting/AccountGrade";
 import LogOut from "./Pages/Logout";
@@ -41,16 +39,6 @@ function App() {
               <Route path="/" exact>
                 <AppLayout>
                   <Home />
-                </AppLayout>
-              </Route>
-              <Route path="/account/bookings" exact>
-                <AppLayout>
-                  <AccountBooking />
-                </AppLayout>
-              </Route>
-              <Route path="/account/memory" exact>
-                <AppLayout>
-                  <AccountMemory />
                 </AppLayout>
               </Route>
               <Route path="/account/grade" exact>
