@@ -62,7 +62,7 @@ const Classroom = () => {
           icon: <LinkOutlined />,
           onClick: () => {
             navigator.clipboard.writeText(
-              `http://localhost:3000/classroom/${item._id}/join/link?cjc=${item.invitationCode}`
+              `https://edulearning.vercel.app/classroom/${item._id}/join/link?cjc=${item.invitationCode}`
             );
             message.success("Copied to clipboard");
           },

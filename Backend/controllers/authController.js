@@ -159,7 +159,7 @@ const authControllers = {
         }
       );
 
-      const link = `http://localhost:3000/activenewpass?resetToken=${resetToken}`;
+      const link = `https://edulearning.vercel.app/activenewpass?resetToken=${resetToken}`;
       const htmlContent = `<p>
                 Bạn đã tiến hành lấy lại thông tin tài khoản trên website của Elearning <br/>
 
@@ -296,7 +296,7 @@ const authControllers = {
     const user = req.user;
     const accessToken = authControllers.generateAccessToken(user);
     res.redirect(
-      `http://localhost:3000/sign-in?gg_login=true&code=${accessToken}`
+      `https://edulearning.vercel.app/sign-in?gg_login=true&code=${accessToken}`
     );
   },
 
@@ -304,7 +304,7 @@ const authControllers = {
     const user = req.user;
     const accessToken = authControllers.generateAccessToken(user);
     res.redirect(
-      `http://localhost:3000/sign-in?fb_login=true&code=${accessToken}`
+      `https://edulearning.vercel.app/sign-in?fb_login=true&code=${accessToken}`
     );
   },
 

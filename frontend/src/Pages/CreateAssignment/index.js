@@ -55,7 +55,7 @@ const CreateAssignment = () => {
           const { data: filenames } = response;
           setFiles(
             filenames.map(
-              (item) => `http://localhost:5000/${item}`
+              (item) => `https://elearning-g2i8.onrender.com/${item}`
             )
           );
           Swal.fire({
@@ -84,7 +84,7 @@ const CreateAssignment = () => {
           const { data: filenames } = response;
           setDocuments(
             filenames.map(
-              (item) => `http://localhost:5000/${item}`
+              (item) => `https://elearning-g2i8.onrender.com/${item}`
             )
           );
           Swal.fire({
