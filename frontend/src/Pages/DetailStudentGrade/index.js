@@ -35,7 +35,7 @@ function DetailStudentGrade() {
         gradeComposition: assignment.gradeComposition,
       };
 
-      await gradeReviewApi.createGradeReview(
+      const gradeReview = await gradeReviewApi.createGradeReview(
         studentId,
         classId,
         assignment._id,
@@ -44,8 +44,6 @@ function DetailStudentGrade() {
 
       message.success("Review request sent successfully");
 
-      console.log(classroom);
-
       dispatch(
         createNotification({
           image: userInfo.profilePic,
@@ -53,7 +51,7 @@ function DetailStudentGrade() {
           receiverId: classroom.teachers?.map((teacher) => teacher.accountId),
           type: "grade",
           message: `Student ${userInfo.username} has requested a review for assignment ${assignment.title}`,
-          detailPage: `/classroom/${classId}/grade-review/${assignment._id}`,
+          detailPage: `/classroom/${classId}/grade-review/${gradeReview._id}`,
         })
       );
     } catch (error) {
