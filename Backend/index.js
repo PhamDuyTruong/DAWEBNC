@@ -39,12 +39,12 @@ app.use((req, res, next) => {
 });
 
 
-// http://localhost:3000
+// https://edulearning.vercel.app
 
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: "https://edulearning.vercel.app",
   })
 );
 
