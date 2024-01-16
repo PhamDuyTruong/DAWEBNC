@@ -22,8 +22,11 @@ function DetailStudentGrade() {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
-  const handleReviewRequest = async (currentGrade, assignment) => {
+  const [index, setIndex] = useState(0);
+
+  const handleReviewRequest = async (currentGrade, assignments) => {
     // TODO: Send the review request to the server
+    const assignment = assignments[index];
     try {
       const grade = form.getFieldValue("grade");
       const comment = form.getFieldValue("comment");
@@ -43,6 +46,8 @@ function DetailStudentGrade() {
       );
 
       const gradeReview = response.data;
+
+      console.log(gradeReview);
 
       message.success("Review request sent successfully");
 
@@ -66,6 +71,7 @@ function DetailStudentGrade() {
   };
 
   const showModal = () => {
+    setIndex(index);
     setModalVisible(true);
   };
 
@@ -187,14 +193,14 @@ function DetailStudentGrade() {
               <div className="text-gray-900 font-semibold">
                 {grade.grade} / {assignments[index]?.maxPoint}
               </div>
-              <Button type="primary" onClick={() => showModal()}>
+              <Button type="primary" onClick={() => showModal(index)}>
                 Request Review
               </Button>
               <Modal
                 title="Request Review"
                 open={modalVisible}
                 onOk={() =>
-                  handleReviewRequest(grade.grade, assignments[index])
+                  handleReviewRequest(grade.grade, assignments)
                 }
                 onCancel={() => setModalVisible(false)}
               >
