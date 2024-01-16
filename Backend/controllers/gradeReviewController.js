@@ -9,7 +9,7 @@ const gradeReviewController = {
         studentId,
         classroomId,
         assignmentId,
-        date: new Date(),
+        date: Date.now(),
         ...req.body,
       });
 
